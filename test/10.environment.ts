@@ -2,7 +2,7 @@
 
 import {strict as assert} from "assert";
 
-const TESTNAME = __filename.split("/").pop();
+const TITLE = __filename.split("/").pop();
 
 declare const msCrypto: any;
 
@@ -13,7 +13,7 @@ const ABtoHEX = (data: ArrayBuffer) => UI8AtoHEX(new Uint8Array(data));
  * This is not a test but just shows environment.
  */
 
-describe(TESTNAME, () => {
+describe(TITLE, () => {
 
     let nodeCrypto = require("crypto");
     if (nodeCrypto && "function" !== typeof nodeCrypto.createHash) nodeCrypto = null;

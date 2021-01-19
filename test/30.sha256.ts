@@ -1,12 +1,17 @@
 #!/usr/bin/env mocha -R spec
 
 import {strict as assert} from "assert";
-import {createHash} from "../lib/createhash-browser";
+import {createHash, createHashJS} from "../lib/createhash-browser";
 
-const TESTNAME = __filename.split("/").pop();
+const TITLE = __filename.split("/").pop();
 
-describe(TESTNAME, () => {
+describe(TITLE, () => {
+    describe("createHash('sha256')", () => testFor(createHash));
 
+    describe("createHashJS('sha256')", () => testFor(createHashJS));
+});
+
+function testFor(createHash: typeof createHashJS) {
     it("input: string", async () => {
         assert.equal(await createHash("SHA256").update("foo").digest("hex"), "2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae");
     });
@@ -37,4 +42,4 @@ describe(TESTNAME, () => {
 
         assert.deepEqual(Array.from(await createHash("SHA256").digest()), expected, "without update()");
     });
-});
+}
