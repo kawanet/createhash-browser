@@ -1,0 +1,27 @@
+{
+  "include": [
+    "./lib",
+    "./test"
+  ],
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "es5",
+      "es2015.promise"
+    ],
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "noImplicitReturns": false,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "removeComments": false,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "target": "ES2018",
+    "types": [
+      "mocha",
+      "node"
+    ]
+  }
+}

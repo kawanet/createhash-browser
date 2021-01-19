@@ -1,0 +1,58 @@
+{
+  "name": "createhash-browser",
+  "description": "SHA-1 and SHA-256 cryptographic hash function both for browsers and Node.js",
+  "version": "0.9.0",
+  "author": "Yusuke Kawasaki <u-suke@kawa.net>",
+  "browser": {
+    "crypto": false,
+    "sha1-uint8array": "sha1-uint8array/dist/sha1-uint8array.min.js",
+    "sha256-uint8array": "sha256-uint8array/dist/sha256-uint8array.min.js"
+  },
+  "bugs": {
+    "url": "https://github.com/kawanet/createhash-browser/issues"
+  },
+  "contributors": [
+    "Yusuke Kawasaki <u-suke@kawa.net>"
+  ],
+  "dependencies": {
+    "sha1-uint8array": "^0.9.0",
+    "sha256-uint8array": "^0.9.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "^8.2.0",
+    "@types/node": "^14.14.21",
+    "browserify": "^17.0.0",
+    "mocha": "^8.2.1",
+    "terser": "^5.5.1",
+    "typescript": "^4.1.3"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist/*.js",
+    "lib/*.js",
+    "types/*.d.ts"
+  ],
+  "homepage": "https://github.com/kawanet/createhash-browser#readme",
+  "keywords": [
+    "SHA-256",
+    "SubtleCrypto",
+    "crypto",
+    "digest",
+    "hash"
+  ],
+  "license": "MIT",
+  "main": "lib/createhash-browser.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kawanet/createhash-browser.git"
+  },
+  "scripts": {
+    "build": "./node_modules/.bin/tsc -p .",
+    "build-browser": "make -C browser clean all",
+    "fixpack": "fixpack",
+    "mocha": "./node_modules/.bin/mocha -R spec test/*.js",
+    "test": "npm run mocha"
+  },
+  "typings": "./types/createhash-browser.d.ts"
+}
