@@ -28,15 +28,15 @@ for detail.
 The interface is a `Promise` version of Node.js's [crypto](https://nodejs.org/api/crypto.html) module's
 `createHash(algor).update(data).digest(format)` syntax.
 
-| Methods | Sync / Async | Node.js | Modern browsers | Old browsers |
+| Methods | Sync / Async | Node.js | Modern browsers | Legacy browsers |
 |----|----|----|----|----|
-| Node.js's `crypto.createHash` | sync | ✅ Only | ❌ N/A | ❌ N/A |   
+| Node.js's `crypto.createHash()` | synchronous | ✅ Only | ❌ N/A | ❌ N/A |   
 | `createhash-browser` | `Promise` | ✅ Native |  ✅ Native |  ✅ Pure JS |
 | W3C `crypto.subtle.digest()` | `Promise` | ❌ N/A | ✅ Most browsers | ❌ N/A |
-| IE11 `msCrypto.subtle.digest()` | `oncomplete` event | ❌ N/A | ❌ N/A | ✅ IE 11 only |
+| IE11 `msCrypto.subtle.digest()` | `oncomplete` | ❌ N/A | ❌ N/A | ✅ IE 11 only |
 
-Note that modern browsers'
-[SubtleCrypto](https://developer.mozilla.org/docs/Web/API/SubtleCrypto) API is onlh available under
+Note that W3C
+[SubtleCrypto](https://developer.mozilla.org/docs/Web/API/SubtleCrypto) API is only available on modern browsers under
 [secure origins](https://www.chromium.org/Home/chromium-security/prefer-secure-origins-for-powerful-new-features) policy.
 It doesn't work on your local `http://192.168.0.1:3000/` server, unfortunately.
 
