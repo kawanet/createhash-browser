@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>createhash-browser live demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://cdn.jsdelivr.net/npm/es6-promise/dist/es6-promise.auto.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/createhash-browser/dist/createhash-browser.min.js"></script>
+
+  <!--
+  <script src="./dist/createhash-browser.min.js"></script>
+  -->
+
+  <script>
+    function update(form) {
+      CH.createHash(form.algo.value).update(form.source.value).digest('hex').then(function(hex) {
+        form.digest.value = hex;
+      }).catch(function(reason) {
+        form.digest.value = reason && reason.message || reason;
+      });
+    }
+  </script>
+  <style>
+      * {
+          box-sizing: border-box;
+      }
+
+      body {
+          font-family: arial, sans-serif;
+          padding: 1em;
+      }
+
+      center, footer {
+          margin: 1em 0;
+          padding: 0;
+      }
+
+      select {
+          font-size: 140%;
+          padding: 5px;
+          border: 2px solid black;
+          border-radius: 5px;
+      }
+
+      option {
+          font-size: 140%;
+      }
+
+      textarea {
+          width: 100%;
+          height: 10em;
+          display: block;
+          font-size: 120%;
+          background: #eee;
+          padding: 10px;
+          border: 2px solid black;
+          border-radius: 5px;
+      }
+
+      input {
+          width: 100%;
+          display: block;
+          font-size: 120%;
+          font-family: "Courier New", monospace;
+          background: #eee;
+          padding: 10px;
+          border: 2px solid black;
+          border-radius: 5px;
+      }
+  </style>
+</head>
+<body>
+
+<form onsubmit="return false">
+  <h1>createhash-browser live demo</h1>
+
+  <p>
+    <select id="algo" onchange="update(this.form)">
+      <option selected>sha1</option>
+      <option>sha256</option>
+    </select>
+  </p>
+
+  <textarea id="source" autofocus onfocus="update(this.form)" onkeyup="update(this.form)" onchange="update(this.form)"></textarea>
+
+  <center>↓</center>
+
+  <input type="text" id="digest">
+
+  <ul>
+    <li><code>crypto.subtle.digest</code>:
+      <script>document.write((("undefined" !== typeof crypto) && crypto.subtle && ("function" === typeof crypto.subtle.digest)) ? "OK" : "NG")</script>
+    </li>
+    <li><code>msCrypto.subtle.digest</code>:
+      <script>document.write(("undefined" !== typeof msCrypto) && msCrypto.subtle && ("function" === typeof msCrypto.subtle.digest) ? "OK" : "NG")</script>
+    </li>
+  </ul>
+
+  <footer>
+    <a href="https://github.com/kawanet/createhash-browser">https://github.com/kawanet/createhash-browser</a>
+  </footer>
+</form>
+</body>
+</html>
