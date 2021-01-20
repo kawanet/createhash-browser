@@ -10,7 +10,10 @@ const TITLE = __filename.split("/").pop();
 
 const isBrowser = ("undefined" !== typeof window);
 
-const REPEAT = process.env.REPEAT || (isBrowser ? 10000 : 10000);
+declare const msCrypto: any;
+const hasMsCrypto = ("undefined" !== typeof msCrypto) && msCrypto.subtle && ("function" === typeof msCrypto.subtle.digest);
+
+const REPEAT = process.env.REPEAT || (isBrowser ? (hasMsCrypto ? 10000 : 10000) : 10000);
 
 const stringToUint8Array = (text: string) => new Uint8Array([].map.call(unescape(encodeURI(text)), (c: string) => c.charCodeAt(0)));
 const toArray = (data: number[] | Uint8Array) => [].slice.call(data);
@@ -40,7 +43,7 @@ describe(`REPEAT=${REPEAT} ${TITLE}`, () => {
         it('SHA1.createHash().update(data).digest("hex")', hexTest(() => SHA1.createHash().update(data).digest("hex"), hex));
     });
 
-    describe("SHA-2", () => {
+    describe("SHA-256", () => {
         const hex = SHA256.createHash("sha256").update(text).digest("hex");
         const bin = toArray(SHA256.createHash("sha256").update(text).digest());
 
