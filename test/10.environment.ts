@@ -18,9 +18,9 @@ describe(TITLE, () => {
     let nodeCrypto = require("crypto");
     if (nodeCrypto && "function" !== typeof nodeCrypto.createHash) nodeCrypto = null;
 
-    const w3cSubtle = ("undefined" !== typeof crypto) && crypto.subtle && ("function" === typeof crypto.subtle.digest) && crypto.subtle || null;
-    const msSubtle = ("undefined" !== typeof msCrypto) && msCrypto.subtle && ("function" === typeof msCrypto.subtle.digest) && msCrypto.subtle || null;
-    const encodeText = ("function" === typeof TextEncoder) && ((str: string) => new TextEncoder().encode(str)) || null;
+    const hasSubtle = ("undefined" !== typeof crypto) && crypto.subtle && ("function" === typeof crypto.subtle.digest);
+    const hasMsCrypto = ("undefined" !== typeof msCrypto) && msCrypto.subtle && ("function" === typeof msCrypto.subtle.digest);
+    const hasEncoder = ("function" === typeof TextEncoder);
 
     const oneByte = new Uint8Array([0x66, 0x6f, 0x6f]); // "foo"
     const expected = "2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae";
@@ -30,17 +30,17 @@ describe(TITLE, () => {
         assert.equal(nodeCrypto.createHash("SHA256").update("foo").digest("hex"), expected);
     });
 
-    (w3cSubtle ? it : it.skip)("crypto.subtle.digest()", async () => {
+    (hasSubtle ? it : it.skip)("crypto.subtle.digest()", async () => {
         assert.equal(typeof crypto.subtle.digest, "function");
         assert.equal(ABtoHEX(await crypto.subtle.digest("SHA-256", oneByte)), expected);
     });
 
-    (msSubtle ? it : it.skip)("msCrypto.subtle.digest()", async () => {
+    (hasMsCrypto ? it : it.skip)("msCrypto.subtle.digest()", async () => {
         assert.equal(typeof msCrypto.subtle.digest, "function");
     });
 
-    (encodeText ? it : it.skip)("new TextEncoder().encode()", async () => {
+    (hasEncoder ? it : it.skip)("new TextEncoder().encode()", async () => {
         assert.equal(typeof TextEncoder, "function");
-        assert.equal(UI8AtoHEX(encodeText("foo")), "666f6f");
+        assert.equal(UI8AtoHEX(new TextEncoder().encode("foo")), "666f6f");
     });
 });
