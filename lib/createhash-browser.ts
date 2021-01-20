@@ -116,7 +116,7 @@ class Hash implements AsyncHash {
         } else {
             this.promise = Promise.resolve().then(() => {
                 const isString = ("string" === typeof data);
-                const trySubtle = subtle && !(isString && !encodeText) && !(!w3cSubtle && msSubtle && data && !data.length) && !NG[algo];
+                const trySubtle = subtle && !(isString && !encodeText) && !(msSubtle && data && !data.length) && !NG[algo];
 
                 // try SubtleCrypto at first
                 if (trySubtle) {
@@ -129,7 +129,7 @@ class Hash implements AsyncHash {
 
                 function fallback(reason?: any) {
                     // flag NG to the next request
-                    NG[algo] = true;
+                    if (reason) NG[algo] = true;
 
                     const c = native || shimCrypto[algo] || (algo && shimCrypto[algo.toUpperCase()]);
                     if (!c) return Promise.reject(reason || new Error("Digest method not supported"));
