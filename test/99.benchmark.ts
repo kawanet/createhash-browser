@@ -14,7 +14,7 @@ const REPEAT = process.env.REPEAT || (isBrowser ? 10000 : 10000);
 
 const stringToUint8Array = (text: string) => new Uint8Array([].map.call(unescape(encodeURI(text)), (c: string) => c.charCodeAt(0)));
 const toArray = (data: number[] | Uint8Array) => [].slice.call(data);
-const w3cSubtle = ("undefined" !== typeof crypto) && crypto.subtle && ("function" === typeof crypto.subtle.digest) && crypto.subtle || null;
+const hasSubtle = ("undefined" !== typeof crypto) && crypto.subtle && ("function" === typeof crypto.subtle.digest);
 
 describe(`REPEAT=${REPEAT} ${TITLE}`, () => {
 
@@ -25,7 +25,7 @@ describe(`REPEAT=${REPEAT} ${TITLE}`, () => {
         const hex = SHA1.createHash("sha1").update(text).digest("hex");
         const bin = toArray(SHA1.createHash("sha1").update(text).digest());
 
-        (w3cSubtle ? it : it.skip)('crypto.subtle.digest("sha1", data)', binTest(async () => new Uint8Array(await crypto.subtle.digest("SHA-1", data)), bin));
+        (hasSubtle ? it : it.skip)('crypto.subtle.digest("sha1", data)', binTest(async () => new Uint8Array(await crypto.subtle.digest("SHA-1", data)), bin));
 
         it('createHash("sha1").update(text).digest()', binTest(() => createHash("sha1").update(text).digest(), bin));
         it('createHash("sha1").update(data).digest()', binTest(() => createHash("sha1").update(data).digest(), bin));
@@ -44,7 +44,7 @@ describe(`REPEAT=${REPEAT} ${TITLE}`, () => {
         const hex = SHA256.createHash("sha256").update(text).digest("hex");
         const bin = toArray(SHA256.createHash("sha256").update(text).digest());
 
-        (w3cSubtle ? it : it.skip)('crypto.subtle.digest("sha256", data)', binTest(async () => new Uint8Array(await crypto.subtle.digest("SHA-256", data)), bin));
+        (hasSubtle ? it : it.skip)('crypto.subtle.digest("sha256", data)', binTest(async () => new Uint8Array(await crypto.subtle.digest("SHA-256", data)), bin));
 
         it('createHash("sha256").update(text).digest()', binTest(() => createHash("sha256").update(text).digest(), bin));
         it('createHash("sha256").update(data).digest()', binTest(() => createHash("sha256").update(data).digest(), bin));

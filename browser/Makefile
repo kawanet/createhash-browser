@@ -1,8 +1,8 @@
 #!/usr/bin/env bash -c make
 
-all: ../dist/createhash-browser.min.js test-es2018
+all: dist test
 
-all-es5: ../dist/createhash-browser.min.js test-es5
+dist: ../dist/createhash-browser.min.js
 
 ../dist/createhash-browser.min.js: ../build/bundle.js
 	mkdir -p ../dist
@@ -13,26 +13,21 @@ all-es5: ../dist/createhash-browser.min.js test-es5
 	perl -i -pe 's#^("use strict"|Object.defineProperty|exports.*= void 0)#// $$&#' $@
 
 # ES5
+test-es5: dist ../build/lib/createhash-browser.js
+	cp ../package.json ../build
+	../node_modules/.bin/browserify -o ../build/test.js ../build/test/*.js
+
 ../build/lib/createhash-browser.js: ../lib/*.ts ../test/*.ts
 	../node_modules/.bin/tsc -p ../browser
 
 # ES2018
+test: dist ../lib/createhash-browser.js
+	../node_modules/.bin/browserify -o ../build/test.js ../test/*.js
+
 ../lib/createhash-browser.js: ../lib/*.ts ../test/*.ts
 	../node_modules/.bin/tsc -p ..
 
-# ES5
-test-es5: ../build/lib/createhash-browser.js
-	cp ../package.json ../build
-	../node_modules/.bin/browserify -o ../build/test.js ../build/test/*.js
-
-# ES2018
-test-es2018: ../lib/createhash-browser.js
-	../node_modules/.bin/browserify -o ../build/test.js ../test/*.js
-
 clean:
 	/bin/rm -fr ../build ../dist/*.js ../lib/*.js ../test/*.js
-
-test: all
-	open ../browser/test.html
 
 .PHONY: all clean test
