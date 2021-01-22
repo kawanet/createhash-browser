@@ -23,7 +23,7 @@ See TypeScript declaration
 [createhash-browser.d.ts](https://github.com/kawanet/createhash-browser/blob/main/types/createhash-browser.d.ts)
 for detail.
 
-## NATIVE APIs
+## COMPATIBILITY
 
 The interface is a `Promise` version of Node.js's [crypto](https://nodejs.org/api/crypto.html) module's
 `createHash(algor).update(data).digest(format)` syntax.
@@ -38,9 +38,9 @@ The interface is a `Promise` version of Node.js's [crypto](https://nodejs.org/ap
 Note that W3C
 [SubtleCrypto](https://developer.mozilla.org/docs/Web/API/SubtleCrypto) API is only available on modern browsers under
 [secure origins](https://www.chromium.org/Home/chromium-security/prefer-secure-origins-for-powerful-new-features) policy.
-It doesn't work on your local `http://192.168.0.1:3000/` server, unfortunately.
+It wouldn't work, for example, on your `http://192.168.0.1:3000/` local server, unfortunately.
 
-`createhash-browser` works both on Node.js and browsers.
+`createhash-browser` could work both on Node.js and browsers consistently.
 It runs natively with `crypto.createHash` on Node.js,
 and with `crypto.subtle.digest()` or `msCrypto.subtle.digest()` on browsers if available.
 It could fallback to run with pure JavaScript implementations of
@@ -48,47 +48,43 @@ It could fallback to run with pure JavaScript implementations of
 [sha256-uint8array](https://www.npmjs.com/package/sha256-uint8array) modules
 in case those native methods not available.
 
-## BENCHMARKS
+## SPEED
 
 Node.js's native `crypto` module runs faster than pure JavaScript implementation.
-It seems, however, `createHashJS()` runs even faster than native
-`crypto.subtle.digest()` function on modern browsers, surprisingly.
+The benchmark shows an interesting result that `createHashJS()` runs even faster than native
+`crypto.subtle.digest()` function on modern browsers, though.
 
 ### SHA-1
 
 |Usage|Node v14|Chrome 87|Safari 14|IE 11|Note|
 |----|----|----|----|----|----|
-|`crypto.subtle.digest("sha1", data)`|-|410ms|441ms|-|native|
-|`createHash("sha1").update(text).digest()`|90ms|468ms|489ms|2,267ms|auto|
-|`createHash("sha1").update(data).digest()`|78ms|403ms|458ms|2,087ms|auto|
-|`createHashJS("sha1").update(text).digest()`|160ms|262ms|208ms|2,164ms|pure JS|
-|`createHashJS("sha1").update(data).digest()`|136ms|236ms|186ms|2,104ms|pure JS|
-|`createHash("sha1").update(text).digest("hex")`|34ms|402ms|416ms|1,813ms|auto|
-|`createHash("sha1").update(data).digest("hex")`|34ms 👍|367ms|415ms|1,721ms|auto|
-|`createHashJS("sha1").update(text).digest("hex")`|146ms|217ms|143ms|1,812ms|pure JS|
-|`createHashJS("sha1").update(data).digest("hex")`|127ms|195ms|125ms|1,720ms|pure JS|
-|`SHA1.createHash().update(data).digest("hex")`|120ms|188ms 👍|113ms 👍|1,595ms 👍|pure JS|
+|createHash("sha1").update(data).digest("hex")|31ms 👍|369ms|446ms|1,527ms|auto|
+|createHash("sha1").update(data).digest()|72ms|425ms|515ms|1,861ms|auto|
+|createHash("sha1").update(text).digest("hex")|33ms|429ms|457ms|1,811ms|auto|
+|createHash("sha1").update(text).digest()|75ms|489ms|561ms|2,222ms|auto|
+|createHashJS("sha1").update(data).digest("hex")|94ms|173ms 👍|107ms 👍|1,504ms 👍|pure JS|
+|createHashJS("sha1").update(data).digest()|101ms|214ms|178ms|1,856ms|pure JS|
+|createHashJS("sha1").update(text).digest("hex")|144ms|218ms|148ms|1,778ms|pure JS|
+|createHashJS("sha1").update(text).digest()|153ms|270ms|219ms|2,212ms|pure JS|
 
 ### SHA-256
 
 |Usage|Node v14|Chrome 87|Safari 14|IE 11|Note|
 |----|----|----|----|----|----|
-|`crypto.subtle.digest("sha256", data)`|-|405ms|577ms|-|native|
-|`createHash("sha256").update(text).digest()`|101ms|467ms|651ms|2,655ms|auto|
-|`createHash("sha256").update(data).digest()`|96ms|420ms|619ms|2,006ms|auto|
-|`createHashJS("sha256").update(text).digest()`|170ms|335ms|304ms|2,686ms|pure JS|
-|`createHashJS("sha256").update(data).digest()`|144ms|323ms|282ms|2,543ms|pure JS|
-|`createHash("sha256").update(text).digest("hex")`|48ms|383ms|531ms|2,167ms|auto|
-|`createHash("sha256").update(data).digest("hex")`|46ms 👍|348ms|506ms|1,820ms 👍|auto|
-|`createHashJS("sha256").update(text).digest("hex")`|156ms|270ms|177ms|2,196ms|pure JS|
-|`createHashJS("sha256").update(data).digest("hex")`|136ms|263ms 👍|162ms|2,104ms|pure JS|
-|`SHA256.createHash().update(data).digest("hex")`|130ms|264ms|149ms 👍|1,982ms|pure JS|
+|createHash("sha256").update(data).digest("hex")|45ms 👍|393ms|536ms|1,747ms 👍|auto|
+|createHash("sha256").update(data).digest()|93ms|437ms|701ms|1,955ms|auto|
+|createHash("sha256").update(text).digest("hex")|46ms|425ms|532ms|2,233ms|auto|
+|createHash("sha256").update(text).digest()|96ms|495ms|719ms|2,683ms|auto|
+|createHashJS("sha256").update(data).digest("hex")|122ms|245ms 👍|150ms 👍|1,962ms|pure JS|
+|createHashJS("sha256").update(data).digest()|125ms|303ms|273ms|2,406ms|pure JS|
+|createHashJS("sha256").update(text).digest("hex")|162ms|303ms|180ms|2,298ms|pure JS|
+|createHashJS("sha256").update(text).digest()|167ms|366ms|314ms|2,680ms|pure JS|
 
-The input is approx 1KB in length. `text` is a string. `data` is an `Uint8Array`.
+The input is approx 1KB in length. The input variable `data` is an `Uint8Array`, `text` is a string.
 
-The output format is a hexadecimal string or an `Uint8Array`.
+The output format is a `hex` string or an `Uint8Array`.
 
-The benchmark result above is tested on macOS 10.15.7 Intel Core i7 3.2GHz. Try it as below.
+The result above is tested on macOS 10.15.7 Intel Core i7 3.2GHz. Try it as below.
 
 ```sh
 git clone https://github.com/kawanet/createhash-browser.git
@@ -108,6 +104,7 @@ open browser/test.html
 
 The minified version of the library is also available for browsers via
 [jsDelivr](https://www.jsdelivr.com/package/npm/createhash-browser) CDN.
+It's just 9KB.
 
 - Live Demo https://kawanet.github.io/createhash-browser/
 - Minified https://cdn.jsdelivr.net/npm/createhash-browser/dist/createhash-browser.min.js
@@ -129,10 +126,9 @@ The minified version of the library is also available for browsers via
 ## SEE ALSO
 
 - https://www.npmjs.com/package/createhash-browser
-- https://www.npmjs.com/package/sha1-uint8array
-- https://www.npmjs.com/package/sha256-uint8array
+- https://github.com/kawanet/sha1-uint8array
+- https://github.com/kawanet/sha256-uint8array
 - https://github.com/kawanet/createhash-browser
-- https://github.com/kawanet/createhash-browser/blob/main/types/createhash-browser.d.ts
 
 ## MIT LICENSE
 
