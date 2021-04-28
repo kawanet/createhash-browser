@@ -15,8 +15,8 @@
     "Yusuke Kawasaki <u-suke@kawa.net>"
   ],
   "dependencies": {
-    "sha1-uint8array": "^0.10.0",
-    "sha256-uint8array": "^0.10.0"
+    "sha1-uint8array": "^0.10.1",
+    "sha256-uint8array": "^0.10.1"
   },
   "devDependencies": {
     "@types/mocha": "^8.2.2",

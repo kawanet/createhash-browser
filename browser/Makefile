@@ -9,6 +9,7 @@ dist: ../dist/createhash-browser.min.js
 	../node_modules/.bin/terser -c -m --ecma 5 -o $@ $<
 
 ../build/bundle.js: ../build/lib/createhash-browser.js
+	../node_modules/.bin/browserify --list $<
 	../node_modules/.bin/browserify -s CH -o $@ $<
 	perl -i -pe 's#^("use strict"|Object.defineProperty|exports.*= void 0)#// $$&#' $@
 
