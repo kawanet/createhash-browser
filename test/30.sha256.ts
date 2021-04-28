@@ -1,7 +1,7 @@
 #!/usr/bin/env mocha -R spec
 
 import {strict as assert} from "assert";
-import {createHash, createHashJS} from "../lib/createhash-browser";
+import {createHash, createHashJS} from "../";
 
 const TITLE = __filename.split("/").pop();
 

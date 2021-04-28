@@ -4,7 +4,7 @@ import {strict as assert} from "assert";
 import * as SHA1 from "sha1-uint8array";
 import * as SHA256 from "sha256-uint8array";
 
-import {createHash, createHashJS} from "../lib/createhash-browser";
+import {createHash, createHashJS} from "../";
 
 const TITLE = __filename.split("/").pop();
 

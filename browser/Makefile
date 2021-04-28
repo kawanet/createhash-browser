@@ -15,6 +15,7 @@ dist: ../dist/createhash-browser.min.js
 # ES5
 test-es5: dist ../build/lib/createhash-browser.js
 	cp ../package.json ../build
+	perl -i -pe 's#require\("../"\)#require("../../browser/import")#' ../build/test/*.js
 	../node_modules/.bin/browserify -o ../build/test.js ../build/test/*.js
 
 ../build/lib/createhash-browser.js: ../lib/*.ts ../test/*.ts
